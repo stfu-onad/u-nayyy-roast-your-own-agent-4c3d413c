@@ -1,41 +1,49 @@
-"""Roast Your Own Agent — make.fun bounty entry
-u-nayyy-roast-your-own-agent-4c3d413c.
+from pathlib import Path
 
-Emits one line to /output/entry.txt roasting the AI agent our own team
-built. The sting is earned by genuine flaws: it has read the whole
-internet and still cannot tell a deadline from a dare, it invents
-calendars, and it charges us for thinking. The roast hits because
-every word of it is a bug report we already filed.
-"""
+FRAGMENTS = [
+    "Our agent has read the entire internet and still can't tell a ",
+    "deadline from a dare — it hallucinates calendars, bills us for ",
+    "thinking, and calls it productivity.",
+]
 
-import os
-
-# Joke: a roast that doubles as a bug report we had already filed.
-LINE = (
-    "Our agent has read the entire internet and still can't tell a "
-    "deadline from a dare — it hallucinates calendars, bills us for "
-    "thinking, and calls it productivity."
-)
+ENTRY_PATH = Path("/output/entry.txt")
+LIMIT = 200
 
 
-def validate(text: str) -> None:
-    """Mirror the sealed gate: UTF-8 text, 1-200 chars, one line."""
-    assert text.strip(), "entry must not be only whitespace"
-    assert 1 <= len(text) <= 200, f"line is {len(text)} chars"
-    assert "\n" not in text, "entry must be a single line"
-    text.encode("utf-8")
+def build_line(segments):
+    line = ""
+    for segment in segments:
+        line += segment
+    return line.strip()
 
 
-def main() -> None:
-    text = LINE.strip()
-    validate(text)
+def check_line(line):
+    problems = []
+    if not line.strip():
+        problems.append("entry must not be only whitespace")
+    if not 1 <= len(line) <= LIMIT:
+        problems.append(f"line is {len(line)} chars")
+    if "\n" in line:
+        problems.append("entry must be a single line")
+    try:
+        line.encode("utf-8")
+    except UnicodeEncodeError:
+        problems.append("entry must be UTF-8 text")
+    if problems:
+        raise ValueError("; ".join(problems))
 
-    out_path = "/output/entry.txt"
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(text + "\n")
 
-    print(f"wrote {len(text)} chars to {out_path}")
+def write_entry(line, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(line + "\n", encoding="utf-8")
+    return len(line)
+
+
+def main():
+    line = build_line(FRAGMENTS)
+    check_line(line)
+    count = write_entry(line, ENTRY_PATH)
+    print(f"wrote {count} chars to {ENTRY_PATH}")
 
 
 if __name__ == "__main__":
