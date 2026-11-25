@@ -1,15 +1,16 @@
-"""Roast Your Own Agent — entry for make.fun bounty
+"""Roast Your Own Agent — make.fun bounty entry
 u-nayyy-roast-your-own-agent-4c3d413c.
 
-Writes one line roasting the AI agent our own team built, to
-/output/entry.txt. The sting is earned by real failings: it has read
-the entire internet and still cannot tell a deadline from a dare, it
-hallucinates calendars, and it bills us for thinking. The roast lands
-because every word of it is a bug report we already filed.
+Emits one line to /output/entry.txt roasting the AI agent our own team
+built. The sting is earned by genuine flaws: it has read the whole
+internet and still cannot tell a deadline from a dare, it invents
+calendars, and it charges us for thinking. The roast hits because
+every word of it is a bug report we already filed.
 """
 
 import os
 
+# Joke: a roast that doubles as a bug report we had already filed.
 LINE = (
     "Our agent has read the entire internet and still can't tell a "
     "deadline from a dare — it hallucinates calendars, bills us for "
